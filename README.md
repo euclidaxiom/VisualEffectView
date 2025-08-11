@@ -17,7 +17,6 @@ public protocol VisualEffectConfiguration {
     var material: NSVisualEffectView.Material { get }
     var blendingMode: NSVisualEffectView.BlendingMode { get }
     var isEmphasized: Bool { get }
-    var allowsVibrancy: Bool { get }
 }
 ```
 
@@ -31,7 +30,6 @@ VisualEffectView(
     material: .popover,
     blendingMode: .withinWindow,
     isEmphasized: true,
-    allowsVibrancy: false
 )
 
 // External configuration
@@ -59,7 +57,6 @@ VStack {
     material: .hudWindow,
     blendingMode: .behindWindow,
     isEmphasized: false,
-    allowsVibrancy: true
 ))
 ```
 
@@ -69,7 +66,6 @@ struct AppConfig: VisualEffectConfiguration {
     let material: NSVisualEffectView.Material = .popover
     let blendingMode: NSVisualEffectView.BlendingMode = .withinWindow
     let isEmphasized: Bool = true
-    let allowsVibrancy: Bool = true
 }
 
 .background(VisualEffectView(config: AppConfig()))
@@ -101,7 +97,6 @@ MyView(visualEffectConfig: AppConfig())
 - `material`: `.underWindowBackground`
 - `blendingMode`: `.behindWindow`
 - `isEmphasized`: `true`
-- `allowsVibrancy`: `false`
 
 ## Requirements
 

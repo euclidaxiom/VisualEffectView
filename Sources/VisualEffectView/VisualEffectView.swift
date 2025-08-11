@@ -15,9 +15,6 @@ public protocol VisualEffectConfiguration {
     
     /// Whether the effect should be emphasized.
     var isEmphasized: Bool { get }
-    
-    /// Whether the effect should allow vibrancy.
-    var allowsVibrancy: Bool { get }
 }
 
 /**
@@ -27,7 +24,6 @@ public struct DefaultVisualEffectConfiguration: VisualEffectConfiguration {
     public let material: NSVisualEffectView.Material = .underWindowBackground
     public let blendingMode: NSVisualEffectView.BlendingMode = .behindWindow
     public let isEmphasized: Bool = true
-    public let allowsVibrancy: Bool = false
     
     public init() {}
 }
@@ -58,7 +54,6 @@ public struct VisualEffectView: View {
     var material: NSVisualEffectView.Material { configuration.material }
     var blendingMode: NSVisualEffectView.BlendingMode { configuration.blendingMode }
     var isEmphasized: Bool { configuration.isEmphasized }
-    var allowsVibrancy: Bool { configuration.allowsVibrancy }
 
     /// Creates VisualEffectView with default configuration
     public init() {
@@ -75,13 +70,11 @@ public struct VisualEffectView: View {
         material: NSVisualEffectView.Material = .underWindowBackground,
         blendingMode: NSVisualEffectView.BlendingMode = .behindWindow,
         isEmphasized: Bool = true,
-        allowsVibrancy: Bool = false
     ) {
         self.configuration = CustomVisualEffectConfiguration(
             material: material,
             blendingMode: blendingMode,
             isEmphasized: isEmphasized,
-            allowsVibrancy: allowsVibrancy
         )
     }
 
@@ -90,7 +83,6 @@ public struct VisualEffectView: View {
             material: material,
             blendingMode: blendingMode,
             isEmphasized: isEmphasized,
-            allowsVibrancy: allowsVibrancy
         )
         .ignoresSafeArea()
     }
@@ -99,14 +91,12 @@ public struct VisualEffectView: View {
         let material: NSVisualEffectView.Material
         let blendingMode: NSVisualEffectView.BlendingMode
         let isEmphasized: Bool
-        let allowsVibrancy: Bool
     }
     
     private struct Representable: NSViewRepresentable {
         var material: NSVisualEffectView.Material
         var blendingMode: NSVisualEffectView.BlendingMode
         var isEmphasized: Bool
-        var allowsVibrancy: Bool
 
         func makeNSView(context: Context) -> NSVisualEffectView {
             let view = NSVisualEffectView()
@@ -114,7 +104,6 @@ public struct VisualEffectView: View {
             view.blendingMode = blendingMode
             view.state = .active
             view.isEmphasized = isEmphasized
-            view.allowsVibrancy = allowsVibrancy
             return view
         }
 
@@ -122,7 +111,6 @@ public struct VisualEffectView: View {
             nsView.material = material
             nsView.blendingMode = blendingMode
             nsView.isEmphasized = isEmphasized
-            nsView.allowsVibrancy = allowsVibrancy
         }
     }
 }
