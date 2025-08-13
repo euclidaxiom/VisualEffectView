@@ -1,81 +1,55 @@
 import SwiftUI
-    import AppKit
+import AppKit
     
-    /**
-     Protocol defining VisualEffectView configuration.
-     Used by intermediate packages to delegate configuration to the final app.
-     */
-    public protocol VisualEffectConfiguration {
-        /// The visual effect material to apply.
-        var material: NSVisualEffectView.Material { get }
-        /// The blending mode for the effect.
-        var blendingMode: NSVisualEffectView.BlendingMode { get }
-        /// Whether the effect should be emphasized.
-        var isEmphasized: Bool { get }
+public protocol VisualEffectConfiguration {
+    var material: NSVisualEffectView.Material { get }
+    var blendingMode: NSVisualEffectView.BlendingMode { get }
+    var isEmphasized: Bool { get }
+}
+    
+public struct VisualEffectView: View {
+    private let configuration: VisualEffectConfiguration?
+    
+    public init(config: VisualEffectConfiguration? = nil) {
+        self.configuration = config
     }
     
-    /**
-     SwiftUI wrapper for NSVisualEffectView.
-     Provides translucent backgrounds and blur effects for macOS apps.
-     Supports direct parameter configuration or external configuration via protocol.
+    public init(
+        material: NSVisualEffectView.Material,
+        blendingMode: NSVisualEffectView.BlendingMode,
+        isEmphasized: Bool = true
+    ) {
+        self.configuration = CustomVisualEffectConfiguration(
+            material: material,
+            blendingMode: blendingMode,
+            isEmphasized: isEmphasized
+        )
+    }
     
-     ## Usage Examples
-     // Default configuration
-     VisualEffectView()
+    public var body: some View {
+        Representable(configuration: configuration)
+            .ignoresSafeArea()
+    }
     
-     // Direct parameters
-     VisualEffectView(material: .popover, blendingMode: .withinWindow, isEmphasized: true)
+    private struct CustomVisualEffectConfiguration: VisualEffectConfiguration {
+        let material: NSVisualEffectView.Material
+        let blendingMode: NSVisualEffectView.BlendingMode
+        let isEmphasized: Bool
+    }
     
-     // External configuration
-     struct AppConfig: VisualEffectConfiguration { ... }
-     VisualEffectView(config: AppConfig())
-     */
-    public struct VisualEffectView: View {
-        private let configuration: VisualEffectConfiguration?
+    private struct Representable: NSViewRepresentable {
+        var configuration: VisualEffectConfiguration?
     
-        /// Creates VisualEffectView with an optional external configuration.
-        /// If the configuration is nil, default values are used.
-        public init(config: VisualEffectConfiguration? = nil) {
-            self.configuration = config
+        func makeNSView(context: Context) -> NSVisualEffectView {
+            let view = NSVisualEffectView()
+            view.state = .active
+            return view
         }
     
-        /// Creates VisualEffectView with direct parameters
-        public init(
-            material: NSVisualEffectView.Material,
-            blendingMode: NSVisualEffectView.BlendingMode,
-            isEmphasized: Bool = true
-        ) {
-            self.configuration = CustomVisualEffectConfiguration(
-                material: material,
-                blendingMode: blendingMode,
-                isEmphasized: isEmphasized
-            )
-        }
-    
-        public var body: some View {
-            Representable(configuration: configuration)
-                .ignoresSafeArea()
-        }
-    
-        private struct CustomVisualEffectConfiguration: VisualEffectConfiguration {
-            let material: NSVisualEffectView.Material
-            let blendingMode: NSVisualEffectView.BlendingMode
-            let isEmphasized: Bool
-        }
-    
-        private struct Representable: NSViewRepresentable {
-            var configuration: VisualEffectConfiguration?
-    
-            func makeNSView(context: Context) -> NSVisualEffectView {
-                let view = NSVisualEffectView()
-                view.state = .active
-                return view
-            }
-    
-            func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
-                nsView.material = configuration?.material ?? .popover
-                nsView.blendingMode = configuration?.blendingMode ?? .behindWindow
-                nsView.isEmphasized = configuration?.isEmphasized ?? true
-            }
+        func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
+            nsView.material = configuration?.material ?? .popover
+            nsView.blendingMode = configuration?.blendingMode ?? .behindWindow
+            nsView.isEmphasized = configuration?.isEmphasized ?? true
         }
     }
+}
