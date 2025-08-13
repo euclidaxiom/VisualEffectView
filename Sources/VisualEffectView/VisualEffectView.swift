@@ -24,15 +24,11 @@ import SwiftUI
      VisualEffectView()
     
      // Direct parameters
-     VisualEffectView(material: .popover, blendingMode: .withinWindow)
+     VisualEffectView(material: .popover, blendingMode: .withinWindow, isEmphasized: true)
     
      // External configuration
      struct AppConfig: VisualEffectConfiguration { ... }
      VisualEffectView(config: AppConfig())
-    
-     // Optional external configuration
-     VisualEffectView(config: anOptionalConfig)
-    
      */
     public struct VisualEffectView: View {
         private let configuration: VisualEffectConfiguration?
@@ -77,7 +73,7 @@ import SwiftUI
             }
     
             func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
-                nsView.material = configuration?.material ?? .underWindowBackground
+                nsView.material = configuration?.material ?? .popover
                 nsView.blendingMode = configuration?.blendingMode ?? .behindWindow
                 nsView.isEmphasized = configuration?.isEmphasized ?? true
             }
